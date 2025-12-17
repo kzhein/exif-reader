@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:;base64,=" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <title>EXIF reader</title>
+    <style>
+      body {
+        padding: 1rem;
+      }
+
+      pre:empty {
+        padding: 0;
+      }
+
+      pre {
+        padding: 1rem;
+        margin-top: 1rem;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <input type="file" name="input" id="input" accept="image/*" />
+      <div id="image-preview"></div>
+      <pre id="exif-data"></pre>
+    </div>
+
+    <script type="module">
+      import exifr from 'https://esm.sh/exifr@7.1.3';
+
+      const fileInput = document.querySelector('#input');
+      const imagePreview = document.querySelector('#image-preview');
+      const exifData = document.querySelector('#exif-data');
+
+      fileInput.addEventListener('change', async e => {
+        try {
+          exifData.textContent = '';
+          imagePreview.innerHTML = '';
+
+          if (e.target.files.length === 0) {
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.addEventListener('load', progressEvent => {
+            imagePreview.innerHTML = /*html*/ `<img src="${progressEvent.target.result}" >`;
+          });
+          reader.readAsDataURL(e.target.files[0]);
+
+          const data = await exifr.parse(e.target.files[0]);
+          if (!data) {
+            exifData.textContent = 'No data found!';
+            return;
+          }
+          exifData.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+    </script>
+  </body>
+</html>
