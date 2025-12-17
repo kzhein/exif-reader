@@ -11,7 +11,8 @@
     <title>EXIF reader</title>
     <style>
       body {
-        padding: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
       }
 
       pre:empty {
@@ -26,10 +27,12 @@
     </style>
   </head>
   <body>
-    <div>
-      <input type="file" name="input" id="input" />
-      <div id="image-preview"></div>
-      <pre id="exif-data"></pre>
+    <div class="container">
+      <div>
+        <input type="file" name="input" id="input" />
+        <div id="image-preview"></div>
+        <pre id="exif-data"></pre>
+      </div>
     </div>
 
     <script type="module">
